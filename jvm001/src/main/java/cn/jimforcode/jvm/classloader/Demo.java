@@ -8,10 +8,18 @@ import java.util.List;
  */
 public class Demo {
     public static void main(String[] args) {
-        List<Object> list= Collections.EMPTY_LIST;
-        List<Object> list2= Collections.EMPTY_LIST;
-        System.out.println(list);
-        System.out.println(list2);
-        System.out.println(list==list2);
+        System.out.println(Demo2.str);
+    }
+}
+class Demo1{
+    static String str="xxxxx";
+    static{
+        System.out.println("Demo1 ............");
+    }
+}
+
+class Demo2 extends Demo1{
+    static {
+        System.out.println("Demo2 .............");
     }
 }

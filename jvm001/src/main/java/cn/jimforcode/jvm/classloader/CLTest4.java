@@ -13,33 +13,42 @@ import java.io.InputStream;
 public class CLTest4 extends ClassLoader{
 
 
-     private String classloadName;
+     private String classloaderName;
      private final String fileExtension=".class";
+     private String path;
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public CLTest4(String classloadName) {
         super();
-        this.classloadName = classloadName;
+        this.classloaderName = classloadName;
     }
 
-    public CLTest4(ClassLoader parent, String classloadName) {
+    public CLTest4(ClassLoader parent, String classloaderName) {
         super(parent);
-        this.classloadName = classloadName;
+        this.classloaderName = classloaderName;
     }
 
 
     @Override
     protected Class<?> findClass(String className) throws ClassNotFoundException {
+        System.out.println("findClass invoked:"+className);
+        System.out.println("classLoader:"+this.classloaderName);
         byte[] data= this.loadClassData(className);
         return this.defineClass(className,data,0,data.length);
     }
 
     private byte[] loadClassData(String name){
+        System.out.println("loadClassData invoked:"+name);
         InputStream is = null;
         byte[] data=null;
         ByteArrayOutputStream baos = null;
         try{
-            this.classloadName= this.classloadName.replace(",","/");
-            is= new FileInputStream(new File(name+this.fileExtension));
+            name=name.replace(".",File.separator);
+             is= new FileInputStream(new File(this.path+name+this.fileExtension));
+             baos= new ByteArrayOutputStream();
             int ch=0;
             while (-1!=(ch=is.read())){
                 baos.write(ch);
@@ -58,16 +67,15 @@ public class CLTest4 extends ClassLoader{
         return data;
     }
 
-     public static void  test(ClassLoader classLoader) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class<?> clazz =classLoader.loadClass("cn.jimforcode.jvm.classloader.CL");
-        Object object = clazz.newInstance();
-        System.out.println(object);
-    }
 
 
     public static void main(String[] args) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
             CLTest4 test4 = new CLTest4("loader1");
-          test(test4);
+            test4.setPath("G:\\");
+        Class<?> clazz =test4.loadClass("cn.jimforcode.jvm.classloader.MyTest1");
+        Object object = clazz.newInstance();
+        System.out.println(object.getClass().getClassLoader());
+        ;
     }
 
 
@@ -88,7 +96,7 @@ public class CLTest4 extends ClassLoader{
     @Override
     public String toString() {
         return "CLTest4{" +
-                "classloadName='" + classloadName + '\'' +
+                "classloaderName='" + classloaderName + '\'' +
                 ", fileExtension='" + fileExtension + '\'' +
                 '}';
     }

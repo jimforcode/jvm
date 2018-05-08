@@ -80,19 +80,6 @@ public class CLTest4 extends ClassLoader{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public String toString() {
         return "CLTest4{" +
